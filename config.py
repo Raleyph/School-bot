@@ -1,7 +1,7 @@
 from telebot import types
 import COVID19Py
 
-TOKEN = '1506257040:AAH5DunpqOf38JPrsIv2MFwpfjVlSafhwnI'
+TOKEN = ''
 
 covid = COVID19Py.COVID19()
 location = covid.getLocationByCountryCode("UA")
