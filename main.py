@@ -66,6 +66,64 @@ def callback(call):
                 bot.send_message(call.message.chat.id, '1а')
             elif call.data == '1b':
                 bot.send_message(call.message.chat.id, '1б')
+            elif call.data == '1v':
+                bot.send_message(call.message.chat.id, '1v')
+            elif call.data == '2a':
+                bot.send_message(call.message.chat.id, '2a')
+            elif call.data == '2b':
+                bot.send_message(call.message.chat.id, '2b')
+            elif call.data == '2v':
+                bot.send_message(call.message.chat.id, '2v')
+            elif call.data == '3a':
+                bot.send_message(call.message.chat.id, '3a')
+            elif call.data == '3b':
+                bot.send_message(call.message.chat.id, '3b')
+            elif call.data == '3v':
+                bot.send_message(call.message.chat.id, '3v')
+            elif call.data == '4a':
+                bot.send_message(call.message.chat.id, '4a')
+            elif call.data == '4b':
+                bot.send_message(call.message.chat.id, '4б')
+            elif call.data == '4v':
+                bot.send_message(call.message.chat.id, '4v')
+            elif call.data == '5a':
+                bot.send_message(call.message.chat.id, '5a')
+            elif call.data == '5b':
+                bot.send_message(call.message.chat.id, '5b')
+            elif call.data == '5v':
+                bot.send_message(call.message.chat.id, '5v')
+            elif call.data == '6a':
+                bot.send_message(call.message.chat.id, '6a')
+            elif call.data == '6b':
+                bot.send_message(call.message.chat.id, '6b')
+            elif call.data == '6v':
+                bot.send_message(call.message.chat.id, '7v')
+            elif call.data == '7a':
+                bot.send_message(call.message.chat.id, '8a')
+            elif call.data == '8b':
+                bot.send_message(call.message.chat.id, '8b')
+            elif call.data == '8v':
+                bot.send_message(call.message.chat.id, '8v')
+            elif call.data == '9a':
+                bot.send_message(call.message.chat.id, '9a')
+            elif call.data == '9b':
+                bot.send_message(call.message.chat.id, '9b')
+            elif call.data == '9v':
+                bot.send_message(call.message.chat.id, '9v')
+            elif call.data == '10a':
+                bot.send_message(call.message.chat.id, '10a')
+            elif call.data == '10b':
+                bot.send_message(call.message.chat.id, '10б')
+            elif call.data == '10v':
+                bot.send_message(call.message.chat.id, '10v')
+            elif call.data == '11a':
+                bot.send_message(call.message.chat.id, '11a')
+            elif call.data == '11b':
+                bot.send_message(call.message.chat.id, '11b')
+            elif call.data == '11v':
+                bot.send_message(call.message.chat.id, '11v')
+            else:
+                bot.send_message(call.from_user.id, 'Помилка!')
 
             bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.id, text="Введіть імена та прізвища без помилок через кому", reply_markup=None)
     except Exception as e:
