@@ -3,7 +3,7 @@ import COVID19Py
 
 from telebot import types
 
-bot = telebot.TeleBot('1506257040:AAH5DunpqOf38JPrsIv2MFwpfjVlSafhwnI')
+bot = telebot.TeleBot('')
 covid = COVID19Py.COVID19()
 location = covid.getLocationByCountryCode("UA")
 
