@@ -1,2 +1,2 @@
-# school_bot
+# School Telegram Bot
 Школьный Телеграм бот
