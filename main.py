@@ -5,7 +5,6 @@ import sqlite3
 from telebot import types
 
 bot = telebot.TeleBot(config.TOKEN)
-mode = 0
 __connection = None
 __data = None
 __mode = None
