@@ -7,7 +7,7 @@ location = covid.getLocationByCountryCode("UA")
 date = location[0]['last_updated'].split("T")
 time = date[1].split(".")
 
-TOKEN = '1506257040:AAH5DunpqOf38JPrsIv2MFwpfjVlSafhwnI'
+TOKEN = ''
 
 
 # первые классы
