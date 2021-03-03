@@ -10,6 +10,7 @@ bot = telebot.TeleBot(config.TOKEN)
 mode = None             # режим
 lang = 'ua'             # язык
 class_set = None        # класс
+sent_ms = 0             # разрешение на отправку
 
 eat_id = 1672178639     # id получателя заказов в столовую
 lost_id = 1672178639    # id получателя отсутствующих
@@ -58,13 +59,7 @@ def send_welcome(message):
 
 # обработка отсутствующих
 def lost(message):
-    sent = bot.send_message(message.from_user.id, 'Введіть імена учнів через кому:')
-    bot.register_next_step_handler(sent, send_list)
-
-
-# обработка заказов в столовую
-def eat(message):
-    sent = bot.send_message(message.from_user.id, 'Введіть дані про заказ у форматі 2*25, 3*30')
+    sent = bot.send_message(message.from_user.id, 'Введіть прізвища учнів через кому:')
     bot.register_next_step_handler(sent, send_list)
 
 
@@ -72,16 +67,25 @@ def eat(message):
 def send_list(message):
     global class_set
     global mode
+    global sent_ms
 
     mess = message.text
 
+    confirm = types.InlineKeyboardMarkup(row_width=2)
+    confirm.add(config.ok, config.no)
+
     if mode == 1:
-        bot.send_message(lost_id, 'Відсутні ' + class_set + ': ' + mess)
-        bot.send_message(message.from_user.id, 'Дані відправлені!')
-        mode = 0
-    elif mode == 2:
-        bot.send_message(eat_id, 'Заказ від ' + class_set + ': ' + mess)
-        bot.send_message(message.from_user.id, 'Заказ відправлено!')
+        bot.send_message(message.from_user.id, 'Буде відправлено наступне:\n' +
+                                               'Відсутні ' + class_set + ': ' + mess, reply_markup=confirm)
+        if sent_ms == 1:
+            bot.send_message(lost_id, 'Відсутні ' + class_set + ': ' + mess)
+            bot.send_message(message.from_user.id, 'Дані відправлені!')
+            mode = 0
+        elif sent_ms == 2:
+            bot.send_message(message.from_user.id, 'Дія відхилена!')
+            mode = 0
+    else:
+        bot.send_message(message.from_user.id, 'Помилка!')
         mode = 0
 
 
@@ -114,310 +118,17 @@ def get_text_messages(message):
         bot.send_message(message.from_user.id, config.covid_message, parse_mode='html')
     elif message.text.lower() == 'їдальня':
         mode = 2
-        bot.send_message(message.chat.id, 'Виберіть клас:')
+        bot.send_message(message.chat.id, 'Дана функція поки що не працює')
     elif message.text.lower() == 'розклад':
         mode = 3
         bot.send_message(message.chat.id, 'Виберіть клас:')
     elif mode == 1:
-        if message.text.lower() in classes_list.classes.get("a1"):
+        for key in classes_list.classes.items():
+            class_set = classes_list.classes[key]
+            print(class_set)
+            break
+        if message.text.lower == key:
             lost(message)
-            class_set = '1A'
-        elif message.text.lower() in classes_list.classes.get("b1"):
-            lost(message)
-            class_set = '1Б'
-        elif message.text.lower() in classes_list.classes.get("v1"):
-            lost(message)
-            class_set = '1В'
-        elif message.text.lower() in classes_list.classes.get("a2"):
-            lost(message)
-            class_set = '2А'
-        elif message.text.lower() in classes_list.classes.get("b2"):
-            lost(message)
-            class_set = '2Б'
-        elif message.text.lower() in classes_list.classes.get("v2"):
-            lost(message)
-            class_set = '2В'
-        elif message.text.lower() in classes_list.classes.get("a3"):
-            lost(message)
-            class_set = '3А'
-        elif message.text.lower() in classes_list.classes.get("b3"):
-            lost(message)
-            class_set = '3Б'
-        elif message.text.lower() in classes_list.classes.get("v3"):
-            lost(message)
-            class_set = '3В'
-        elif message.text.lower() in classes_list.classes.get("a4"):
-            lost(message)
-            class_set = '4А'
-        elif message.text.lower() in classes_list.classes.get("b4"):
-            lost(message)
-            class_set = '4Б'
-        elif message.text.lower() in classes_list.classes.get("v4"):
-            lost(message)
-            class_set = '4В'
-        elif message.text.lower() in classes_list.classes.get("a5"):
-            lost(message)
-            class_set = '5А'
-        elif message.text.lower() in classes_list.classes.get("b5"):
-            lost(message)
-            class_set = '5Б'
-        elif message.text.lower() in classes_list.classes.get("v5"):
-            lost(message)
-            class_set = '5В'
-        elif message.text.lower() in classes_list.classes.get("a6"):
-            lost(message)
-            class_set = '6А'
-        elif message.text.lower() in classes_list.classes.get("b6"):
-            lost(message)
-            class_set = '6Б'
-        elif message.text.lower() in classes_list.classes.get("v6"):
-            lost(message)
-            class_set = '6В'
-        elif message.text.lower() in classes_list.classes.get("a7"):
-            lost(message)
-            class_set = '7A'
-        elif message.text.lower() in classes_list.classes.get("b7"):
-            lost(message)
-            class_set = '7Б'
-        elif message.text.lower() in classes_list.classes.get("v7"):
-            lost(message)
-            class_set = '7В'
-        elif message.text.lower() in classes_list.classes.get("a8"):
-            lost(message)
-            class_set = '8А'
-        elif message.text.lower() in classes_list.classes.get("b8"):
-            lost(message)
-            class_set = '8Б'
-        elif message.text.lower() in classes_list.classes.get("v8"):
-            lost(message)
-            class_set = '8В'
-        elif message.text.lower() in classes_list.classes.get("a9"):
-            lost(message)
-            class_set = '9А'
-        elif message.text.lower() in classes_list.classes.get("b9"):
-            lost(message)
-            class_set = '9Б'
-        elif message.text.lower() in classes_list.classes.get("v9"):
-            lost(message)
-            class_set = '9В'
-        elif message.text.lower() in classes_list.classes.get("a10"):
-            lost(message)
-            class_set = '10A'
-        elif message.text.lower() in classes_list.classes.get("b10"):
-            lost(message)
-            class_set = '10Б'
-        elif message.text.lower() in classes_list.classes.get("v10"):
-            lost(message)
-            class_set = '10В'
-        elif message.text.lower() in classes_list.classes.get("a11"):
-            lost(message)
-            class_set = '11A'
-        elif message.text.lower() in classes_list.classes.get("b11"):
-            lost(message)
-            class_set = '11Б'
-        elif message.text.lower() in classes_list.classes.get("v11"):
-            lost(message)
-            class_set = '11В'
-    elif mode == 2:
-        if message.text.lower() in classes_list.classes.get("a1"):
-            eat(message)
-            class_set = '1-A'
-        elif message.text.lower() in classes_list.classes.get("b1"):
-            eat(message)
-            class_set = '1-Б'
-        elif message.text.lower() in classes_list.classes.get("v1"):
-            eat(message)
-            class_set = '1-В'
-        elif message.text.lower() in classes_list.classes.get("a2"):
-            eat(message)
-            class_set = '2-А'
-        elif message.text.lower() in classes_list.classes.get("b2"):
-            eat(message)
-            class_set = '2-Б'
-        elif message.text.lower() in classes_list.classes.get("v2"):
-            eat(message)
-            class_set = '2-В'
-        elif message.text.lower() in classes_list.classes.get("a3"):
-            eat(message)
-            class_set = '3-А'
-        elif message.text.lower() in classes_list.classes.get("b3"):
-            eat(message)
-            class_set = '3-Б'
-        elif message.text.lower() in classes_list.classes.get("v3"):
-            eat(message)
-            class_set = '3-В'
-        elif message.text.lower() in classes_list.classes.get("a4"):
-            eat(message)
-            class_set = '4-А'
-        elif message.text.lower() in classes_list.classes.get("b4"):
-            eat(message)
-            class_set = '4-Б'
-        elif message.text.lower() in classes_list.classes.get("v4"):
-            eat(message)
-            class_set = '4-В'
-        elif message.text.lower() in classes_list.classes.get("a5"):
-            eat(message)
-            class_set = '5-А'
-        elif message.text.lower() in classes_list.classes.get("b5"):
-            eat(message)
-            class_set = '5-Б'
-        elif message.text.lower() in classes_list.classes.get("v5"):
-            eat(message)
-            class_set = '5-В'
-        elif message.text.lower() in classes_list.classes.get("a6"):
-            eat(message)
-            class_set = '6-А'
-        elif message.text.lower() in classes_list.classes.get("b6"):
-            eat(message)
-            class_set = '6-Б'
-        elif message.text.lower() in classes_list.classes.get("v6"):
-            eat(message)
-            class_set = '6-В'
-        elif message.text.lower() in classes_list.classes.get("a7"):
-            eat(message)
-            class_set = '7-A'
-        elif message.text.lower() in classes_list.classes.get("b7"):
-            eat(message)
-            class_set = '7-Б'
-        elif message.text.lower() in classes_list.classes.get("v7"):
-            eat(message)
-            class_set = '7-В'
-        elif message.text.lower() in classes_list.classes.get("a8"):
-            eat(message)
-            class_set = '8-А'
-        elif message.text.lower() in classes_list.classes.get("b8"):
-            eat(message)
-            class_set = '8-Б'
-        elif message.text.lower() in classes_list.classes.get("v8"):
-            eat(message)
-            class_set = '8-В'
-        elif message.text.lower() in classes_list.classes.get("a9"):
-            eat(message)
-            class_set = '9-А'
-        elif message.text.lower() in classes_list.classes.get("b9"):
-            eat(message)
-            class_set = '9-Б'
-        elif message.text.lower() in classes_list.classes.get("v9"):
-            eat(message)
-            class_set = '9-В'
-        elif message.text.lower() in classes_list.classes.get("a10"):
-            eat(message)
-            class_set = '10-A'
-        elif message.text.lower() in classes_list.classes.get("b10"):
-            eat(message)
-            class_set = '10-Б'
-        elif message.text.lower() in classes_list.classes.get("v10"):
-            eat(message)
-            class_set = '10-В'
-        elif message.text.lower() in classes_list.classes.get("a11"):
-            eat(message)
-            class_set = '11-A'
-        elif message.text.lower() in classes_list.classes.get("b11"):
-            eat(message)
-            class_set = '11-Б'
-        elif message.text.lower() in classes_list.classes.get("v11"):
-            eat(message)
-            class_set = '11-В'
-    elif mode == 3:
-        if message.text.lower() in classes_list.classes.get("a1"):
-            day_subjects(message)
-            class_set = '1-A'
-        elif message.text.lower() in classes_list.classes.get("b1"):
-            day_subjects(message)
-            class_set = '1-Б'
-        elif message.text.lower() in classes_list.classes.get("v1"):
-            day_subjects(message)
-            class_set = '1-В'
-        elif message.text.lower() in classes_list.classes.get("a2"):
-            day_subjects(message)
-            class_set = '2-А'
-        elif message.text.lower() in classes_list.classes.get("b2"):
-            day_subjects(message)
-            class_set = '2-Б'
-        elif message.text.lower() in classes_list.classes.get("v2"):
-            day_subjects(message)
-            class_set = '2-В'
-        elif message.text.lower() in classes_list.classes.get("a3"):
-            day_subjects(message)
-            class_set = '3-А'
-        elif message.text.lower() in classes_list.classes.get("b3"):
-            day_subjects(message)
-            class_set = '3-Б'
-        elif message.text.lower() in classes_list.classes.get("v3"):
-            day_subjects(message)
-            class_set = '3-В'
-        elif message.text.lower() in classes_list.classes.get("a4"):
-            day_subjects(message)
-            class_set = '4-А'
-        elif message.text.lower() in classes_list.classes.get("b4"):
-            day_subjects(message)
-            class_set = '4-Б'
-        elif message.text.lower() in classes_list.classes.get("v4"):
-            day_subjects(message)
-            class_set = '4-В'
-        elif message.text.lower() in classes_list.classes.get("a5"):
-            day_subjects(message)
-            class_set = '5-А'
-        elif message.text.lower() in classes_list.classes.get("b5"):
-            day_subjects(message)
-            class_set = '5-Б'
-        elif message.text.lower() in classes_list.classes.get("v5"):
-            day_subjects(message)
-            class_set = '5-В'
-        elif message.text.lower() in classes_list.classes.get("a6"):
-            day_subjects(message)
-            class_set = '6-А'
-        elif message.text.lower() in classes_list.classes.get("b6"):
-            day_subjects(message)
-            class_set = '6-Б'
-        elif message.text.lower() in classes_list.classes.get("v6"):
-            day_subjects(message)
-            class_set = '6-В'
-        elif message.text.lower() in classes_list.classes.get("a7"):
-            day_subjects(message)
-            class_set = '7-A'
-        elif message.text.lower() in classes_list.classes.get("b7"):
-            day_subjects(message)
-            class_set = '7-Б'
-        elif message.text.lower() in classes_list.classes.get("v7"):
-            day_subjects(message)
-            class_set = '7-В'
-        elif message.text.lower() in classes_list.classes.get("a8"):
-            day_subjects(message)
-            class_set = '8-А'
-        elif message.text.lower() in classes_list.classes.get("b8"):
-            day_subjects(message)
-            class_set = '8-Б'
-        elif message.text.lower() in classes_list.classes.get("v8"):
-            day_subjects(message)
-            class_set = '8-В'
-        elif message.text.lower() in classes_list.classes.get("a9"):
-            day_subjects(message)
-            class_set = '9-А'
-        elif message.text.lower() in classes_list.classes.get("b9"):
-            day_subjects(message)
-            class_set = '9-Б'
-        elif message.text.lower() in classes_list.classes.get("v9"):
-            day_subjects(message)
-            class_set = '9-В'
-        elif message.text.lower() in classes_list.classes.get("a10"):
-            day_subjects(message)
-            class_set = '10-A'
-        elif message.text.lower() in classes_list.classes.get("b10"):
-            day_subjects(message)
-            class_set = '10-Б'
-        elif message.text.lower() in classes_list.classes.get("v10"):
-            day_subjects(message)
-            class_set = '10-В'
-        elif message.text.lower() in classes_list.classes.get("a11"):
-            day_subjects(message)
-            class_set = '11-A'
-        elif message.text.lower() in classes_list.classes.get("b11"):
-            day_subjects(message)
-            class_set = '11-Б'
-        elif message.text.lower() in classes_list.classes.get("v11"):
-            day_subjects(message)
-            class_set = '11-В'
     else:
         bot.send_message(message.from_user.id, 'Я не знаю, що відповісти :(')
 
@@ -426,6 +137,7 @@ def get_text_messages(message):
 @bot.callback_query_handler(func=lambda call: True)
 def callback(call):
     global lang
+    global sent_ms
     try:
         if call.message:
             if call.data == 'ua_l':
@@ -437,6 +149,10 @@ def callback(call):
             elif call.data == 'en_l':
                 lang = 'en'
                 print(lang)
+            elif call.data == 'c_ok':
+                sent_ms = 1
+            elif call.data == 'c_no':
+                sent_ms = 2
             else:
                 bot.send_message(call.message.chat.id, 'Помилка!')
 
