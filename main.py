@@ -75,8 +75,9 @@ def send_list(message):
     confirm.add(config.ok, config.no)
 
     if mode == 1:
+        class_set_str = "".join(class_set)
         bot.send_message(message.from_user.id, 'Буде відправлено наступне:\n' +
-                                               'Відсутні ' + class_set + ': ' + mess, reply_markup=confirm)
+                                               'Відсутні ' + class_set_str + ': ' + mess, reply_markup=confirm)
         if sent_ms == 1:
             bot.send_message(lost_id, 'Відсутні ' + class_set + ': ' + mess)
             bot.send_message(message.from_user.id, 'Дані відправлені!')
@@ -113,9 +114,6 @@ def get_text_messages(message):
     elif message.text.lower() == 'відсутні':
         mode = 1
         bot.send_message(message.chat.id, 'Виберіть клас:')
-    elif message.text.lower() == 'covid-19':
-        # вывод статистики коронавируса
-        bot.send_message(message.from_user.id, config.covid_message, parse_mode='html')
     elif message.text.lower() == 'їдальня':
         mode = 2
         bot.send_message(message.chat.id, 'Дана функція поки що не працює')
@@ -123,12 +121,11 @@ def get_text_messages(message):
         mode = 3
         bot.send_message(message.chat.id, 'Виберіть клас:')
     elif mode == 1:
-        for key in classes_list.classes.items():
-            class_set = classes_list.classes[key]
-            print(class_set)
-            break
-        if message.text.lower == key:
-            lost(message)
+        data = message.text.lower()
+        for key in classes_list.classes.values():
+            if data in key:
+                lost(message)
+                class_set = key
     else:
         bot.send_message(message.from_user.id, 'Я не знаю, що відповісти :(')
 
