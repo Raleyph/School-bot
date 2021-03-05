@@ -12,7 +12,10 @@ lang = 'ua'             # язык
 class_set = None        # класс
 sent_ms = 0             # разрешение на отправку
 
-eat_id = 1672178639     # id получателя заказов в столовую
+lost = [
+    1672178639
+]
+
 lost_id = 1672178639    # id получателя отсутствующих
 
 # подключение к БД и установка курсора
@@ -58,7 +61,7 @@ def send_welcome(message):
 
 
 # обработка отсутствующих
-def lost(message):
+def lost_set(message):
     sent = bot.send_message(message.from_user.id, 'Введіть прізвища учнів через кому:')
     bot.register_next_step_handler(sent, send_list)
 
@@ -71,23 +74,9 @@ def send_list(message):
 
     mess = message.text
 
-    confirm = types.InlineKeyboardMarkup(row_width=2)
-    confirm.add(config.ok, config.no)
-
-    if mode == 1:
-        class_set_str = "".join(class_set)
-        bot.send_message(message.from_user.id, 'Буде відправлено наступне:\n' +
-                                               'Відсутні ' + class_set_str + ': ' + mess, reply_markup=confirm)
-        if sent_ms == 1:
-            bot.send_message(lost_id, 'Відсутні ' + class_set + ': ' + mess)
-            bot.send_message(message.from_user.id, 'Дані відправлені!')
-            mode = 0
-        elif sent_ms == 2:
-            bot.send_message(message.from_user.id, 'Дія відхилена!')
-            mode = 0
-    else:
-        bot.send_message(message.from_user.id, 'Помилка!')
-        mode = 0
+    class_set_str = "".join(class_set)
+    bot.send_message(lost_id, 'Відсутні ' + class_set_str + ': ' + mess)
+    bot.send_message(message.from_user.id, 'Дані відправлені!')
 
 
 # обработка вывода расписания
@@ -124,8 +113,8 @@ def get_text_messages(message):
         data = message.text.lower()
         for key in classes_list.classes.values():
             if data in key:
-                lost(message)
-                class_set = key
+                lost_set(message)
+                class_set = data
     else:
         bot.send_message(message.from_user.id, 'Я не знаю, що відповісти :(')
 
@@ -146,10 +135,6 @@ def callback(call):
             elif call.data == 'en_l':
                 lang = 'en'
                 print(lang)
-            elif call.data == 'c_ok':
-                sent_ms = 1
-            elif call.data == 'c_no':
-                sent_ms = 2
             else:
                 bot.send_message(call.message.chat.id, 'Помилка!')
 
