@@ -19,7 +19,7 @@ lost = [
 lost_id = 1672178639    # id получателя отсутствующих
 
 # подключение к БД и установка курсора
-conn = sqlite3.connect('database.db', check_same_thread=False)
+conn = sqlite3.connect('db/userdata.db', check_same_thread=False)
 cursor = conn.cursor()
 
 
