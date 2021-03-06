@@ -19,7 +19,7 @@ lost = [
 lost_id = 1672178639    # id получателя отсутствующих
 
 # подключение к БД и установка курсора
-conn = sqlite3.connect('db/userdata.db', check_same_thread=False)
+conn = sqlite3.connect('db/database.db', check_same_thread=False)
 cursor = conn.cursor()
 
 
@@ -104,7 +104,6 @@ def get_text_messages(message):
         mode = 1
         bot.send_message(message.chat.id, 'Виберіть клас:')
     elif message.text.lower() == 'їдальня':
-        mode = 2
         bot.send_message(message.chat.id, 'Дана функція поки що не працює')
     elif message.text.lower() == 'розклад':
         mode = 3
@@ -128,13 +127,10 @@ def callback(call):
         if call.message:
             if call.data == 'ua_l':
                 lang = 'ua'
-                print(lang)
             elif call.data == 'ru_l':
                 lang = 'ru'
-                print(lang)
             elif call.data == 'en_l':
                 lang = 'en'
-                print(lang)
             else:
                 bot.send_message(call.message.chat.id, 'Помилка!')
 
